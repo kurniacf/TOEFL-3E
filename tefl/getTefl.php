@@ -1,5 +1,4 @@
 <?php
-
 include_once('../routes/connect.php');
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Credentials: true");
@@ -7,39 +6,29 @@ header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization, X-Requested-With');
 
-if (!empty($_POST['id_user'])) {
-    $id_user = $_POST['id_user'];
-    $query = "SELECT * FROM tefl WHERE id_user = '$id_user'";
-} else if (!empty($_POST['nama_user'])) {
-    $id_user = $_POST['id_user'];
-    $query = "SELECT * FROM purchased WHERE id_user = '$id_user'";
+if (!empty($_GET['id_user'])) {
+    $id_user = $_GET['id_user'];
+    $query = "SELECT users.nrp_user, users.name_user, users.department_user, users.hp_user, 
+        tefl.listening_tefl, tefl.grammar_tefl, tefl.reading_tefl, tefl.avg_tefl
+        FROM users,tefl WHERE users.id_user = '$id_user' AND tefl.id_user = '$id_user'";
 } else {
-    $query = "SELECT * FROM purchased ORDER BY id ASC";
+    $query = "SELECT users.nrp_user, users.name_user, users.department_user, users.hp_user, 
+        tefl.listening_tefl, tefl.grammar_tefl, tefl.reading_tefl, tefl.avg_tefl
+        FROM users, tefl ORDER BY users.id_user ASC";
 }
 
 $get = pg_query($connect, $query);
 
 $data = array();
-//$data2 = array();
 
-if (pg_num_rows($get) > 0 || pg_num_rows($get2) > 0) {
-    if ($get2 != NULL) {
-        while ($row = pg_fetch_assoc($get2)) {
-            $data[] = $row;
-        }
-    }
+if (pg_num_rows($get) > 0) {
     while ($row = pg_fetch_assoc($get)) {
         $data[] = $row;
     }
-    // if ($get2 !== 0) {
-    //     while ($row = pg_fetch_assoc($get2)) {
-    //         $data[] = $row;
-    //     }
-    // }
 
-    set_response(true, "Data purchased ditemukan", $data);
+    set_response(true, "Data is Found", $data);
 } else {
-    set_response(false, "Data purchased tidak ditemukan", $data);
+    set_response(false, "Data is Not Found", $data);
 }
 
 function set_response($isSuccess, $message, $data)

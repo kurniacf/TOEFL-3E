@@ -12,9 +12,9 @@ if (!empty($_GET['id_user'])) {
 } else if (!empty($_GET['nrp_user'])) {
     $nrp_user = $_GET['nrp_user'];
     $query = "SELECT * FROM users WHERE nrp_user = '$nrp_user'";
-} else if (!empty($_GET['nama_user'])) {
-    $nama_user = $_GET['nama_user'];
-    $query = "SELECT * FROM users WHERE nama_user = '$nama_user'";
+} else if (!empty($_GET['name_user'])) {
+    $name_user = urlencode($_GET['name_user']);
+    $query = "SELECT * FROM users WHERE name_user = '$name_user'";
 } else {
     $query = "SELECT * FROM users ORDER BY id_user ASC";
 }

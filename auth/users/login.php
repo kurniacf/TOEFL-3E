@@ -30,9 +30,9 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
                 while ($row = pg_fetch_assoc($get)) {
                     $data[] = $row;
                 }
-                set_response(true, "Login user success", $data);
+                set_response(true, "Login User success", $data);
             } else {
-                set_response(false, "Login user failed", $data);
+                set_response(false, "Login User failed", $data);
             }
         } else {
             http_response_code(400);
@@ -40,11 +40,11 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
         }
     } else {
         http_response_code(404);
-        set_response(false, "Email False", "Please Check Your Email");
+        set_response(false, "NRP False", "Please Check Your NRP");
     }
 } else {
     http_response_code(400);
-    set_response(false, "Dont Empty", "Fill in Email and Password");
+    set_response(false, "Dont Empty", "Fill in NRP and Password");
 }
 
 function set_response($isSuccess, $message, $data)

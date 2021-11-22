@@ -6,7 +6,7 @@ header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization, X-Requested-With');
 
-if (!empty($_GET['id_user'])) {
+if (!empty($_GET['id_user']) && !empty($_POST['listening_tefl']) && !empty($_POST['grammar_tefl']) && !empty($_POST['reading_tefl'])) {
     $id_user = $_GET['id_user'];
     $listening_tefl = $_POST['listening_tefl'];
     $grammar_tefl = $_POST['grammar_tefl'];

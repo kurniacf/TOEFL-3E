@@ -19,8 +19,8 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
         $get = pg_query($connect, $passwordDB);
         $row = pg_fetch_row($get);
         $passwordORI = array_pop($row);
-        $passwordCheck = password_verify($password, $passwordORI);
 
+        $passwordCheck = password_verify($password_user, $passwordORI);
         if ($passwordCheck) {
             $query = "SELECT * FROM users WHERE nrp_user = '$nrp_user'";
             $get = pg_query($connect, $query);
@@ -30,9 +30,9 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
                 while ($row = pg_fetch_assoc($get)) {
                     $data[] = $row;
                 }
-                set_response(true, "Login User success", $data);
+                set_response(true, "Login user success", $data);
             } else {
-                set_response(false, "Login User failed", $data);
+                set_response(false, "Login user failed", $data);
             }
         } else {
             http_response_code(400);
@@ -40,7 +40,7 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
         }
     } else {
         http_response_code(404);
-        set_response(false, "NRP False", "Please Check Your NRP");
+        set_response(false, "Email False", "Please Check Your Email");
     }
 } else {
     http_response_code(400);

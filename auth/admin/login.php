@@ -28,9 +28,18 @@ if (!empty($_POST['nip_admin']) && !empty($_POST['password_admin'])) {
 
             if (pg_num_rows($get) > 0) {
                 while ($row = pg_fetch_assoc($get)) {
-                    $data[] = $row;
+                    $_SESSION = array(
+                        "login" => true,
+                        "data" => array(
+                            "id_admin" => $row["id_admin"], // is not a must and not unsafe / you can let it out if you want
+                            "nip_admin" => $row["nip_admin"], // this is also not a must
+                            "name_admin" => $row["name_admin"],
+                            "time" => time() + 60 * 20 // so here you can set a time how long the session is available. for this example it is 10min.
+                        )
+                    );
+                    //$data[] = $row;
                 }
-                set_response(true, "Login Admin success", $data);
+                set_response(true, "Login Admin success", $_SESSION);
             } else {
                 set_response(false, "Login Admin failed", $data);
             }

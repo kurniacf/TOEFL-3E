@@ -10,15 +10,19 @@ $_POST = json_decode($rest_json, true);
 
 if (!empty($_POST['id_user'])) {
     $id_user = $_POST['id_user'];
-    $query = "SELECT * FROM users WHERE id_user = '$id_user'";
+    $query = "SELECT nrp_user, name_user, department_user, hp_user 
+        FROM users WHERE id_user = '$id_user'";
 } else if (!empty($_POST['nrp_user'])) {
     $nrp_user = $_POST['nrp_user'];
-    $query = "SELECT * FROM users WHERE nrp_user = '$nrp_user'";
+    $query = "SELECT nrp_user, name_user, department_user, hp_user 
+        FROM users WHERE nrp_user = '$nrp_user'";
 } else if (!empty($_POST['name_user'])) {
     $name_user = urlencode($_POST['name_user']);
-    $query = "SELECT * FROM users WHERE name_user = '$name_user'";
+    $query = "SELECT nrp_user, name_user, department_user, hp_user 
+        FROM users WHERE name_user = '$name_user'";
 } else {
-    $query = "SELECT * FROM users ORDER BY id_user ASC";
+    $query = "SELECT nrp_user, name_user, department_user, hp_user 
+        FROM users ORDER BY id_user ASC";
 }
 
 $get = pg_query($connect, $query);

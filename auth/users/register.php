@@ -26,7 +26,7 @@ if (!empty($_POST['name_user']) && !empty($_POST['nrp_user']) && !empty($_POST['
 
 
     if (pg_num_rows($get)) {
-        set_response(true, "NRP has Already Account!", "Check Data Again");
+        set_response(false, "NRP has Already Account!", "Check Data Again");
     } else {
         $query = "INSERT INTO users(nrp_user, name_user, department_user, hp_user, password_user, id_session_user) 
             VALUES ('$nrp_user', '$name_user', '$department_user', '$hp_user','$password_user', '$id_session_user')";

@@ -5,15 +5,17 @@ header("Access-Control-Allow-Credentials: true");
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization, X-Requested-With');
+$rest_json = file_get_contents("php://input");
+$_POST = json_decode($rest_json, true);
 
-if (!empty($_GET['id_user'])) {
-    $id_user = $_GET['id_user'];
+if (!empty($_POST['id_user'])) {
+    $id_user = $_POST['id_user'];
     $query = "SELECT * FROM users WHERE id_user = '$id_user'";
-} else if (!empty($_GET['nrp_user'])) {
-    $nrp_user = $_GET['nrp_user'];
+} else if (!empty($_POST['nrp_user'])) {
+    $nrp_user = $_POST['nrp_user'];
     $query = "SELECT * FROM users WHERE nrp_user = '$nrp_user'";
-} else if (!empty($_GET['name_user'])) {
-    $name_user = urlencode($_GET['name_user']);
+} else if (!empty($_POST['name_user'])) {
+    $name_user = urlencode($_POST['name_user']);
     $query = "SELECT * FROM users WHERE name_user = '$name_user'";
 } else {
     $query = "SELECT * FROM users ORDER BY id_user ASC";

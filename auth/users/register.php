@@ -13,7 +13,6 @@ $id_session_user = session_id();
 
 if (!empty($_POST['name_user']) && !empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
 
-
     $nrp_user = $_POST['nrp_user'];
     $name_user = $_POST['name_user'];
     $department_user = $_POST['department_user'];

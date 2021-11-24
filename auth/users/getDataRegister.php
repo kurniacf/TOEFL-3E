@@ -20,7 +20,7 @@ $data = array();
 if (pg_num_rows($get) > 0) {
     while ($row = pg_fetch_assoc($get)) {
         $_SESSION = array(
-            "login" => true,
+            "register" => true,
             "data" => array(
                 "id_session_user" => $id_session_user,
                 "id_user" => $row["id_user"], // is not a must and not unsafe / you can let it out if you want

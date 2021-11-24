@@ -36,7 +36,7 @@ if (pg_num_rows($get) > 0) {
     set_response(true, "Data is Found", $_SESSION);
 } else {
     http_response_code(400);
-    set_response(false, "Data is Not Found", null);
+    set_response(false, "Data is Not Found", "Session is Wrong!");
 }
 
 function set_response($isSuccess, $message, $data)

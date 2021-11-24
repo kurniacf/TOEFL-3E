@@ -43,10 +43,10 @@ if (!empty($_POST['name_admin']) && !empty($_POST['nip_admin']) && !empty($_POST
                     "id_admin" => $id_admin
                 )
             );
-            set_response(true, "Register User success", $_SESSION);
+            set_response(true, "Register Admin success", $_SESSION);
         } else {
             http_response_code(401);
-            set_response(false, "Register User Failed", null);
+            set_response(false, "Register Admin Failed", null);
         }
     }
 } else {

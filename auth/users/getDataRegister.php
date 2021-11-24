@@ -5,12 +5,13 @@ header("Access-Control-Allow-Credentials: true");
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization, X-Requested-With');
+$rest_json = file_get_contents("php://input");
+$_POST = json_decode($rest_json, true);
 
-if (!empty($_GET['id_user']) && !empty($_POST['id_session_user'])) {
-    $id_user = $_GET['id_user'];
+if (!empty($_POST['id_session_user'])) {
     $id_session_user = $_POST['id_session_user'];
 
-    $query = "SELECT * FROM users WHERE id_user = '$id_user' AND id_session_user = '$id_session_user'";
+    $query = "SELECT * FROM users WHERE id_session_user = '$id_session_user'";
 }
 
 $get = pg_query($connect, $query);
@@ -23,17 +24,18 @@ if (pg_num_rows($get) > 0) {
             "register" => true,
             "data" => array(
                 "id_session_user" => $id_session_user,
-                "id_user" => $row["id_user"], // is not a must and not unsafe / you can let it out if you want
-                "nrp_user" => $row["nrp_user"], // this is also not a must
+                "id_user" => $row["id_user"],
+                "nrp_user" => $row["nrp_user"],
+                "name_user" => $row["name_user"],
                 "department_user" => $row["department_user"],
-                "hp_user" => $row["hp_user"],
-                "time_session" => time() + 60 * 20
+                "hp_user" => $row["hp_user"]
+                //"time_session" => time() + 60 * 20
             )
         );
     }
     set_response(true, "Data is Found", $_SESSION);
 } else {
-    set_response(false, "Data is Not Found", $data);
+    set_response(false, "Data is Not Found", null);
 }
 
 function set_response($isSuccess, $message, $data)

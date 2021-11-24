@@ -13,7 +13,7 @@ $id_session_user = session_id();
 session_regenerate_id();
 $id_session_user = session_id();
 
-if (!empty($_POST['name_user']) && !empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
+if (!empty($_POST['name_user']) && !empty($_POST['nrp_user']) && !empty($_POST['password_user']) && !empty($_POST['department_user']) && !empty($_POST['hp_user'])) {
 
     $nrp_user = $_POST['nrp_user'];
     $name_user = $_POST['name_user'];

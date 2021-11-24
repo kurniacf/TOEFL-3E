@@ -5,16 +5,23 @@ header("Access-Control-Allow-Credentials: true");
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization, X-Requested-With');
+$rest_json = file_get_contents("php://input");
+$_POST = json_decode($rest_json, true);
+
+session_start();
+$id_session_admin = session_id();
+session_regenerate_id();
+$id_session_admin = session_id();
 
 if (!empty($_POST['nip_admin']) && !empty($_POST['password_admin'])) {
     $nip_admin = $_POST['nip_admin'];
     $password_admin = $_POST['password_admin'];
 
-    $emailCheck = "SELECT id_admin FROM admins WHERE nip_admin = '$nip_admin'";
-    $getEmail = pg_query($connect, $emailCheck);
-    $rowEmail = pg_fetch_row($getEmail);
+    $IdCheck = "SELECT id_admin FROM admins WHERE nip_admin = '$nip_admin'";
+    $getId = pg_query($connect, $IdCheck);
+    $rowId = pg_fetch_row($getId);
 
-    if ($rowEmail) {
+    if ($rowId) {
         $passwordDB = "SELECT password_admin FROM admins WHERE nip_admin = '$nip_admin'";
         $get = pg_query($connect, $passwordDB);
         $row = pg_fetch_row($get);
@@ -22,33 +29,34 @@ if (!empty($_POST['nip_admin']) && !empty($_POST['password_admin'])) {
 
         $passwordCheck = password_verify($password_admin, $passwordORI);
         if ($passwordCheck) {
-            $query = "SELECT * FROM admins WHERE nip_admin = '$nip_admin'";
-            $get = pg_query($connect, $query);
-            $data = array();
+            $query1 = "SELECT id_admin FROM admins WHERE nip_admin = '$nip_admin'";
+            $get1 = pg_query($connect, $query1);
+            $data1 = pg_fetch_row($get1);
+            $id_admin = intval(array_pop($data1));
 
-            if (pg_num_rows($get) > 0) {
-                while ($row = pg_fetch_assoc($get)) {
-                    $_SESSION = array(
-                        "login" => true,
-                        "data" => array(
-                            "id_admin" => $row["id_admin"], // is not a must and not unsafe / you can let it out if you want
-                            "nip_admin" => $row["nip_admin"], // this is also not a must
-                            "name_admin" => $row["name_admin"],
-                            "time" => time() + 60 * 20 // so here you can set a time how long the session is available. for this example it is 10min.
-                        )
-                    );
-                    //$data[] = $row;
-                }
+            $query2 = "UPDATE admins set id_session_admin = '$id_session_admin' WHERE id_admin = '$id_admin'";
+            $get2 = pg_query($connect, $query2);
+
+
+            if (pg_num_rows($get1) > 0) {
+                $_SESSION = array(
+                    "login" => true,
+                    "data" => array(
+                        "id_session_admin" => $id_session_admin,
+                        "id_admin" => $id_admin
+                    )
+                );
                 set_response(true, "Login Admin success", $_SESSION);
             } else {
-                set_response(false, "Login Admin failed", $data);
+                http_response_code(401);
+                set_response(false, "Login Admin failed", null);
             }
         } else {
             http_response_code(400);
             set_response(false, "Password False", "Please Check Your Password");
         }
     } else {
-        http_response_code(404);
+        http_response_code(400);
         set_response(false, "NIP False", "Please Check Your NIP");
     }
 } else {

@@ -5,67 +5,45 @@ header("Access-Control-Allow-Credentials: true");
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization, X-Requested-With');
+$rest_json = file_get_contents("php://input");
+$_POST = json_decode($rest_json, true);
 
-if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
-    $nrp_user = $_POST['nrp_user'];
-    $password_user = $_POST['password_user'];
+if (!empty($_POST['id_session_user'])) {
+    $id_session_user = $_POST['id_session_user'];
+    $query = "SELECT * FROM users WHERE id_session_user = '$id_session_user'";
+}
 
-    $emailCheck = "SELECT id_user FROM users WHERE nrp_user = '$nrp_user'";
-    $getEmail = pg_query($connect, $emailCheck);
-    $rowEmail = pg_fetch_row($getEmail);
+$get = pg_query($connect, $query);
 
-    if ($rowEmail) {
-        $passwordDB = "SELECT password_user FROM users WHERE nrp_user = '$nrp_user'";
-        $get = pg_query($connect, $passwordDB);
-        $row = pg_fetch_row($get);
-        $passwordORI = array_pop($row);
+$data = array();
 
-        $passwordCheck = password_verify($password_user, $passwordORI);
-        if ($passwordCheck) {
-            $query = "SELECT * FROM users WHERE nrp_user = '$nrp_user'";
-            $get = pg_query($connect, $query);
-            $data = array();
-
-            if (pg_num_rows($get) > 0) {
-                while ($row = pg_fetch_assoc($get)) {
-
-                    $_SESSION = array(
-                        "login" => true,
-                        "data" => array(
-                            "id_session" => $session,
-                            "id_user" => $row["id_user"], // is not a must and not unsafe / you can let it out if you want
-                            "nrp_user" => $row["nrp_user"], // this is also not a must
-                            "department_user" => $row["department_user"],
-                            "hp_user" => $row["hp_user"],
-                            "time" => time() + 60 * 20 // so here you can set a time how long the session is available. for this example it is 10min.
-                        )
-                    );
-                    //$data[] = $row;
-                }
-                set_response(true, "Login User success", $_SESSION);
-            } else {
-                set_response(false, "Login User failed", $data);
-            }
-        } else {
-            http_response_code(400);
-            set_response(false, "Password False", "Please Check Your Password");
-        }
-    } else {
-        http_response_code(404);
-        set_response(false, "NRP False", "Please Check Your NRP");
+if (pg_num_rows($get) > 0) {
+    while ($row = pg_fetch_assoc($get)) {
+        $_SESSION = array(
+            "login" => true,
+            "data" => array(
+                "id_session_user" => $id_session_user,
+                "id_user" => $row["id_user"],
+                "nrp_user" => $row["nrp_user"],
+                "name_user" => $row["name_user"],
+                "department_user" => $row["department_user"],
+                "hp_user" => $row["hp_user"]
+            )
+        );
     }
+    set_response(true, "Data is Found", $_SESSION);
 } else {
     http_response_code(400);
-    set_response(false, "Dont Empty", "Fill in NRP and Password");
+    set_response(false, "Data is Not Found", "Session is Wrong!");
 }
 
 function set_response($isSuccess, $message, $data)
 {
-    $resul = array(
+    $result = array(
         'isSuccess' => $isSuccess,
         'message' => $message,
         'data' => $data
     );
 
-    echo json_encode($resul);
+    echo json_encode($result);
 }

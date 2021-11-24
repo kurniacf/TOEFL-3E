@@ -48,14 +48,15 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
                 );
                 set_response(true, "Login User success", $_SESSION);
             } else {
-                set_response(false, "Login User failed", $data);
+                http_response_code(401);
+                set_response(false, "Login User failed", null);
             }
         } else {
             http_response_code(400);
             set_response(false, "Password False", "Please Check Your Password");
         }
     } else {
-        http_response_code(404);
+        http_response_code(400);
         set_response(false, "NRP False", "Please Check Your NRP");
     }
 } else {

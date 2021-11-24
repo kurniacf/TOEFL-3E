@@ -15,6 +15,8 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
     $rowEmail = pg_fetch_row($getEmail);
 
     if ($rowEmail) {
+        session_start();
+        $session = session_id();
         $passwordDB = "SELECT password_user FROM users WHERE nrp_user = '$nrp_user'";
         $get = pg_query($connect, $passwordDB);
         $row = pg_fetch_row($get);
@@ -28,9 +30,11 @@ if (!empty($_POST['nrp_user']) && !empty($_POST['password_user'])) {
 
             if (pg_num_rows($get) > 0) {
                 while ($row = pg_fetch_assoc($get)) {
+
                     $_SESSION = array(
                         "login" => true,
                         "data" => array(
+                            "id_session" => $session,
                             "id_user" => $row["id_user"], // is not a must and not unsafe / you can let it out if you want
                             "nrp_user" => $row["nrp_user"], // this is also not a must
                             "department_user" => $row["department_user"],

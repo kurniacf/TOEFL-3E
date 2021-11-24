@@ -25,3 +25,6 @@ CREATE TABLE tefl(
 
 ALTER TABLE tefl 
     ADD FOREIGN KEY (id_user) REFERENCES users(id_user);
+
+ALTER TABLE users 
+    ADD id_session_user VARCHAR(255);

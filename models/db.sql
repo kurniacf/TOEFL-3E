@@ -28,3 +28,6 @@ ALTER TABLE tefl
 
 ALTER TABLE users 
     ADD id_session_user VARCHAR(255);
+
+ALTER TABLE admins 
+    ADD id_session_admin VARCHAR(255);

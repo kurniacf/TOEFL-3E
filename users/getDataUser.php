@@ -22,7 +22,7 @@ if (!empty($_POST['id_user'])) {
         FROM users WHERE name_user = '$name_user'";
 } else {
     $query = "SELECT nrp_user, name_user, department_user, hp_user 
-        FROM users ORDER BY id_user ASC";
+        FROM users ORDER BY id_user DESC";
 }
 
 $get = pg_query($connect, $query);
@@ -36,6 +36,7 @@ if (pg_num_rows($get) > 0) {
 
     set_response(true, "User is Found", $data);
 } else {
+    http_response_code(401);
     set_response(false, "User is Not Found", $data);
 }
 

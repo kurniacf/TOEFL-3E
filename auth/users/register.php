@@ -53,7 +53,7 @@ if (!empty($_POST['name_user']) && !empty($_POST['nrp_user']) && !empty($_POST['
     }
 } else {
     http_response_code(400);
-    set_response(false, "Dont Empty!!", "Fill in NRP and Password");
+    set_response(false, "Dont Empty!!", "Fill in NRP, Name, and Password");
 }
 
 function set_response($isSuccess, $message, $data)

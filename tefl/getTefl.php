@@ -5,9 +5,12 @@ header("Access-Control-Allow-Credentials: true");
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization, X-Requested-With');
+$rest_json = file_get_contents("php://input");
+$_POST = json_decode($rest_json, true);
 
-if (!empty($_GET['id_user'])) {
-    $id_user = $_GET['id_user'];
+
+if (!empty($_POST['id_user'])) {
+    $id_user = $_POST['id_user'];
     $query = "SELECT users.nrp_user, users.name_user, users.department_user, users.hp_user, 
         tefl.listening_tefl, tefl.grammar_tefl, tefl.reading_tefl, tefl.avg_tefl
         FROM users,tefl WHERE users.id_user = '$id_user' AND tefl.id_user = '$id_user'";
@@ -25,9 +28,9 @@ if (pg_num_rows($get) > 0) {
     while ($row = pg_fetch_assoc($get)) {
         $data[] = $row;
     }
-
     set_response(true, "Data is Found", $data);
 } else {
+    http_response_code(401);
     set_response(false, "Data is Not Found", $data);
 }
 
